@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DoubleSite-js-1.0">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="DoubleSite-js-1.0.jar">
+      <element id="module-output" name="DoubleSite.jsMain" />
+    </root>
+  </artifact>
+</component>
