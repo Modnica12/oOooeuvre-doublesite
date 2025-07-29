@@ -18,10 +18,17 @@ object MyCSS : StyleSheet() {
         position(Position.Relative)
     }
 
-    val startImage by style {
+    val startImageHorizontal by style {
         height(100.vh)
-//        backgroundColor(Color.white)
         property("z-index", "3")
+    }
+
+    val startImageVertical by style {
+        height(100.vh)
+//        justifyContent(JustifyContent.Center)
+//        display(DisplayStyle.Flex)
+        property("z-index", "3")
+        overflowX("hidden")
     }
 
     val logoText by style {
@@ -35,7 +42,6 @@ object MyCSS : StyleSheet() {
     }
 
     val imageContainerHorizontal by style {
-        width(100.percent)
         height(100.vh)
         backgroundColor(Color.white)
         justifyContent(JustifyContent.FlexEnd)
@@ -48,10 +54,8 @@ object MyCSS : StyleSheet() {
         backgroundColor(Color.white)
     }
 
-    @OptIn(ExperimentalComposeWebApi::class)
-    val mainText by style {
+    val mainTextHorizontal by style {
         height(5.vh)
-        width(100.percent)
         color(Color.black)
         display(DisplayStyle.Flex)
 //        overflow("hidden")
@@ -60,6 +64,34 @@ object MyCSS : StyleSheet() {
         padding(0.px)
         backgroundColor(Color.white)
         whiteSpace("nowrap")
+    }
+
+    @OptIn(ExperimentalComposeWebApi::class)
+    val mainTextVertical by style {
+        color(Color.black)
+//        display(DisplayStyle.Flex)
+
+//        position(Position.Absolute)
+//        left(50.percent)
+//        top(50.percent)
+//        right(50.percent)
+//        bottom(50.percent)
+//        marginLeft((-50).px)
+//        marginTop((-50).px)
+//        marginRight((-50).px)
+//        marginBottom((-50).px)
+
+
+        position(Position.Fixed)
+//        left(50.percent)
+//        top(50.percent)
+//        transform { translate((-50).percent,(-50).percent) }
+
+        marginLeft(50.vw - 36.pt)
+        marginTop(50.vh - 60.pt)
+
+        fontSize(120.pt)
+        lineHeight(120.pt)
     }
 
 }
