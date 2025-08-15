@@ -10,7 +10,6 @@ import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
-import parseText
 
 fun main() {
     renderComposable(rootElementId = "root") {
@@ -36,11 +35,7 @@ private fun mainPage() {
 
     Div(attrs = { MyCSS.main }) {
 
-        if (isHorizontal) {
-            StartImageHorizontal(verticalScroll)
-        } else {
-            StartImageVertical(verticalScroll)
-        }
+        StartImageVertical(verticalScroll)
 
         ImagesList(isHorizontal)
     }
@@ -55,30 +50,6 @@ private fun mainPage() {
     window.addEventListener("scroll", {
         verticalScroll = window.scrollY
     })
-}
-
-@OptIn(ExperimentalComposeWebApi::class)
-@Composable
-private fun StartImageHorizontal(verticalScroll: Double) {
-    Div(attrs = { classes(MyCSS.startImageHorizontal) }) {
-        parseText().forEachIndexed { index, textParts ->
-            Div(attrs = {
-                classes(MyCSS.mainTextHorizontal)
-                style {
-                    transform {
-                        val horizontalScroll = if (index % 2 == 0) -verticalScroll.px else verticalScroll.px
-                        translateX(horizontalScroll * 0.8)
-                    }
-                }
-            }) {
-                textParts.forEach { textPart ->
-                    Span(attrs = { style { color(textPart.color) } }) {
-                        Text(textPart.text)
-                    }
-                }
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalComposeWebApi::class)
@@ -104,7 +75,7 @@ private fun StartImageVertical(verticalScroll: Double) {
 @Composable
 private fun ImagesList(isHorizontal: Boolean) {
     Repo.photos.forEach { photo ->
-        Div(attrs = { classes(if (isHorizontal) MyCSS.imageContainerHorizontal else MyCSS.imageContainerVertical) }) {
+        Div(attrs = { classes(MyCSS.imageContainerVertical) }) {
             Img(
                 src = photo.url,
                 attrs = {
