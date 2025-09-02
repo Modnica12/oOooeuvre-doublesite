@@ -1,4 +1,3 @@
-import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.*
 
 object MyCSS : StyleSheet() {
@@ -14,20 +13,12 @@ object MyCSS : StyleSheet() {
     }
 
     val main by style {
-        width(100.percent)
+        width(100.vw)
         position(Position.Relative)
-    }
-
-    val startImageHorizontal by style {
-        height(100.vh)
-        property("z-index", "3")
     }
 
     val startImageVertical by style {
         height(100.vh)
-//        justifyContent(JustifyContent.Center)
-//        display(DisplayStyle.Flex)
-        property("z-index", "3")
         overflowX("hidden")
     }
 
@@ -41,57 +32,55 @@ object MyCSS : StyleSheet() {
         color(Color.white)
     }
 
-    val imageContainerHorizontal by style {
-        height(100.vh)
-        backgroundColor(Color.white)
-        justifyContent(JustifyContent.FlexEnd)
-        display(DisplayStyle.Flex)
-    }
-
-    val imageContainerVertical by style {
+    val fullWidthContentBlock by style {
         display(DisplayStyle.Flex)
         width(100.vw)
         backgroundColor(Color.white)
     }
 
-    val mainTextHorizontal by style {
-        height(5.vh)
-        color(Color.black)
-        display(DisplayStyle.Flex)
-//        overflow("hidden")
-        fontSize(64.pt)
-        lineHeight(5.vh)
-        padding(0.px)
+    val fullHeightContentBlock by style {
+        position(Position.Relative)
+        height(100.vh)
         backgroundColor(Color.white)
-        whiteSpace("nowrap")
+        overflowY("hidden")
+        property("mix-blend-mode", "difference")
     }
 
-    @OptIn(ExperimentalComposeWebApi::class)
     val mainTextVertical by style {
         color(Color.black)
-//        display(DisplayStyle.Flex)
-
-//        position(Position.Absolute)
-//        left(50.percent)
-//        top(50.percent)
-//        right(50.percent)
-//        bottom(50.percent)
-//        marginLeft((-50).px)
-//        marginTop((-50).px)
-//        marginRight((-50).px)
-//        marginBottom((-50).px)
-
 
         position(Position.Fixed)
-//        left(50.percent)
-//        top(50.percent)
-//        transform { translate((-50).percent,(-50).percent) }
 
         marginLeft(50.vw - 36.pt)
         marginTop(50.vh - 60.pt)
 
         fontSize(120.pt)
         lineHeight(120.pt)
+    }
+
+    val clockBlock by style {
+        position(Position.Absolute)
+        right(16.px)
+        bottom(8.px)
+    }
+
+    val clockText by style {
+        color(Color.black)
+//        position(Position.Relative)
+        fontSize(120.pt)
+        lineHeight(80.pt)
+    }
+
+    val contactsBlock by style {
+        position(Position.Absolute)
+        left(16.px)
+        bottom(8.px)
+    }
+
+    val contactText by style {
+        color(Color.black)
+        fontSize(48.pt)
+        textDecoration("none")
     }
 
 }

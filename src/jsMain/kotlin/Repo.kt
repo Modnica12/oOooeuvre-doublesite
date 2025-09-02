@@ -1,6 +1,3 @@
-import org.jetbrains.compose.web.css.CSSColorValue
-import org.jetbrains.compose.web.css.Color
-
 object Repo {
 
     val photos = listOf(
@@ -42,53 +39,16 @@ object Repo {
     val logos = listOf(
         Logo(common = "o", rare = "ø"),
         Logo(common = "○", rare = "●", horizontalSpacing = HorizontalSpacing.None),
-        Logo(common = "●", rare = "○", horizontalSpacing = HorizontalSpacing.None),
         Logo(common = "o", rare = "ɵ"),
         Logo(common = "o", rare = "ѳ"),
         Logo(common = "ӧ", rare = "ӫ"),
     )
 
-    val text =
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○{●}{○○ ○}{●}{○}○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○{●}○{○ ○}●{○}○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○{●}{○○ ○}●{○}○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○{●}○○ {○}●{○}○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○{●}○○ {○}●{○}○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○{●}○○ {○}{●}{○}○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○\n" +
-            "○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○ ○●○○"
+    val refs = listOf(
+        Ref(text = "tg", url = "https://www.google.com"),
+        Ref(text = "tg2", url = "https://www.google.com"),
+    )
 
-}
-
-fun parseText(): List<List<TextPart>> = Repo.text
-    .lines()
-    .map { line ->
-        val result = mutableListOf<TextPart>()
-        var currentText = ""
-        line.forEach { symbol ->
-            if (symbol in listOf('{', '}')) {
-                if (currentText.isNotEmpty()) {
-                    result.add(TextPart(currentText, if (symbol == '}') Color.red else Color.black))
-                }
-                currentText = ""
-                return@forEach
-            }
-            currentText += symbol
-        }
-        result.add(TextPart(currentText, Color.black))
-        result
 }
 
 data class Photo(
@@ -108,7 +68,7 @@ enum class HorizontalSpacing(val spacing: String) {
     Large("  ")
 }
 
-data class TextPart(
+data class Ref(
     val text: String,
-    val color: CSSColorValue,
+    val url: String,
 )
