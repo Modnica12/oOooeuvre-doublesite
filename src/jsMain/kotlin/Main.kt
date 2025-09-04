@@ -17,7 +17,7 @@ private val START_TIME = millisecondDiff(Date())
 
 fun main() {
     renderComposable(rootElementId = "root") {
-        Div(attrs = { style { margin(0.px); overflowX("hidden") } }) {
+        Div(attrs = { MyCSS.rootContainer }) {
             mainPage()
         }
     }
@@ -37,9 +37,13 @@ private fun mainPage() {
         }
     }
 
-    Div(attrs = { MyCSS.main }) {
-        StartImageVertical(verticalScroll, isHorizontal)
-        ImagesList()
+    Div(attrs = { MyCSS.mainContainer }) {
+        StartImage(verticalScroll, isHorizontal)
+        if (isHorizontal) {
+            ImagesListHorizontal()
+        } else {
+            ImagesListVertical()
+        }
         Footer((START_TIME / 1000).toInt())
     }
 
@@ -57,8 +61,8 @@ private fun mainPage() {
 
 @OptIn(ExperimentalComposeWebApi::class)
 @Composable
-private fun StartImageVertical(verticalScroll: Float, isHorizontal: Boolean) {
-    Div(attrs = { classes(MyCSS.startImageVertical) }) {
+private fun StartImage(verticalScroll: Float, isHorizontal: Boolean) {
+    Div(attrs = { classes(MyCSS.startImageContainer) }) {
         listOf("○", "●", "○", "○").forEachIndexed { index, symbol ->
             Div(attrs = {
                 classes(MyCSS.mainTextVertical)
@@ -71,7 +75,7 @@ private fun StartImageVertical(verticalScroll: Float, isHorizontal: Boolean) {
                         val logoBuildingTranslation = horizontalScroll * (-(index % 2) + 1.5)
                         translateX(logoBuildingTranslation)
                     }
-                    val alphaLimitedScroll = limitedScroll / if (isHorizontal) 2 else 4
+                    val alphaLimitedScroll = limitedScroll / if (isHorizontal) 1.1 else 3.5
                     val alpha = (255 - alphaLimitedScroll) / 255
                     color(rgba(0, 0, 0, alpha))
                 }
@@ -83,13 +87,36 @@ private fun StartImageVertical(verticalScroll: Float, isHorizontal: Boolean) {
 }
 
 @Composable
-private fun ImagesList() {
+private fun ImagesListVertical() {
     Repo.photos.forEach { photo ->
         Div(attrs = { classes(MyCSS.fullWidthContentBlock) }) {
             Img(
                 src = photo.url,
                 attrs = { style { width(100.vw) } },
             )
+        }
+    }
+}
+
+@Composable
+private fun ImagesListHorizontal() {
+    Div(attrs = { MyCSS.imagesGrid }) {
+        Repo.photos.forEach { photo ->
+            Span(attrs = {
+                style {
+                    property("pointer-events", "none")
+                }
+            }) {
+                Img(
+                    src = photo.url,
+                    attrs = {
+                        style {
+                            height(50.vh)
+                            marginBottom((-5).px)
+                        }
+                    },
+                )
+            }
         }
     }
 }

@@ -2,6 +2,11 @@ import org.jetbrains.compose.web.css.*
 
 object MyCSS : StyleSheet() {
 
+    val rootContainer by style {
+        margin(0.px)
+        overflowX("hidden")
+    }
+
     val header by style {
         alignContent(AlignContent.End)
         width(100.percent)
@@ -12,24 +17,30 @@ object MyCSS : StyleSheet() {
         property("mix-blend-mode", "difference")
     }
 
-    val main by style {
+    val mainContainer by style {
         width(100.vw)
         position(Position.Relative)
     }
 
-    val startImageVertical by style {
+    val startImageContainer by style {
         height(100.vh)
         overflowX("hidden")
+        property("user-select", "none")
+        property("-webkit-user-select", "none")
+        property("-moz-user-select", "none")
+        property("-ms-user-select", "none")
     }
 
     val logoText by style {
         fontSize(164.pt)
         lineHeight(164.pt)
-
         paddingTop(8.px)
         paddingLeft(16.px)
-
         color(Color.white)
+        property("user-select", "none")
+        property("-webkit-user-select", "none")
+        property("-moz-user-select", "none")
+        property("-ms-user-select", "none")
     }
 
     val fullWidthContentBlock by style {
@@ -43,6 +54,16 @@ object MyCSS : StyleSheet() {
         height(100.vh)
         backgroundColor(Color.white)
         overflowY("hidden")
+        property("mix-blend-mode", "difference")
+    }
+
+    val imagesGrid by style {
+        position(Position.Absolute)
+        display(DisplayStyle.Grid)
+        property("grid-template-columns", "repeat(3, 1fr)")
+        property("grid-template-rows", "auto")
+        width(100.vw)
+        backgroundColor(Color.white)
         property("mix-blend-mode", "difference")
     }
 
@@ -62,6 +83,11 @@ object MyCSS : StyleSheet() {
         position(Position.Absolute)
         right(16.px)
         bottom(8.px)
+
+        property("user-select", "none")
+        property("-webkit-user-select", "none")
+        property("-moz-user-select", "none")
+        property("-ms-user-select", "none")
     }
 
     val clockText by style {
