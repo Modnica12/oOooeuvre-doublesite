@@ -58,13 +58,10 @@ object MyCSS : StyleSheet() {
     }
 
     val imagesGrid by style {
-        position(Position.Absolute)
         display(DisplayStyle.Grid)
         property("grid-template-columns", "repeat(3, 1fr)")
         property("grid-template-rows", "auto")
         width(100.vw)
-        backgroundColor(Color.white)
-        property("mix-blend-mode", "difference")
     }
 
     val mainTextVertical by style {

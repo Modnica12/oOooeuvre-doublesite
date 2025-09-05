@@ -5,6 +5,7 @@ import MyCSS
 import NumberToSymbolsConverter
 import Repo
 import androidx.compose.runtime.*
+import convertBinaryToSymbols
 import kotlinx.browser.window
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
@@ -102,9 +103,12 @@ private fun ImagesListVertical() {
 private fun ImagesListHorizontal() {
     Div(attrs = { MyCSS.imagesGrid }) {
         Repo.photos.forEach { photo ->
-            Span(attrs = {
+            Div(attrs = {
+                classes(MyCSS.fullWidthContentBlock)
                 style {
+                    height(50.vh)
                     property("pointer-events", "none")
+                    position(Position.Relative)
                 }
             }) {
                 Img(
@@ -112,10 +116,23 @@ private fun ImagesListHorizontal() {
                     attrs = {
                         style {
                             height(50.vh)
-                            marginBottom((-5).px)
                         }
                     },
                 )
+                Div(attrs = {
+                    style {
+                        right(16.px)
+                        position(Position.Absolute)
+                        top(8.px)
+                        width(50.vw)
+                        height(50.vh)
+                        fontSize(32.pt)
+                    }
+                }) {
+                    Text(
+                        convertBinaryToSymbols("11010000 10010011 11010001 10000000 11010001 10001111 11010000 10110111 11010000 10111101 11010000 10111110 11010000 10110101")
+                    )
+                }
             }
         }
     }

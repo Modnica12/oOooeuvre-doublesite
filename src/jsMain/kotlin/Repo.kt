@@ -2,19 +2,16 @@ object Repo {
 
     val photos = listOf(
         Photo(
-            url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2017.00.33.jpeg",
-        ),
-        Photo(
             url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2016.58.23.jpeg",
         ),
         Photo(
-            url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2017.00.54.jpeg",
+            url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2017.00.33.jpeg",
         ),
         Photo(
             url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2016.57.49.jpeg",
         ),
         Photo(
-            url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2016.59.44.jpeg",
+            url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2017.00.54.jpeg",
         ),
         Photo(
             url = "https://storage.yandexcloud.net/ooooeuvre-polutions-images/photo_2025-07-16%2016.58.55%20(1).jpeg",
@@ -72,3 +69,14 @@ data class Ref(
     val text: String,
     val url: String,
 )
+
+
+fun convertBinaryToSymbols(binary: String): String = binary
+    .map { symbol ->
+        when (symbol) {
+            '0' -> "○"
+            '1' -> "●"
+            else -> " "
+        }
+    }
+        .joinToString(separator = "")
