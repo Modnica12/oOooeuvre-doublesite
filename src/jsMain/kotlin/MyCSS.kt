@@ -14,7 +14,17 @@ object MyCSS : StyleSheet() {
         position(Position.Fixed)
         display(DisplayStyle.Flex)
         justifyContent(JustifyContent.SpaceBetween)
+        property("z-index", "3")
         property("mix-blend-mode", "difference")
+    }
+
+    val logoText by style {
+        fontSize(164.pt)
+        lineHeight(164.pt)
+        paddingTop(8.px)
+        paddingLeft(16.px)
+        color(Color.white)
+        makeNonSelectable()
     }
 
     val mainContainer by style {
@@ -25,26 +35,20 @@ object MyCSS : StyleSheet() {
     val startImageContainer by style {
         height(100.vh)
         overflowX("hidden")
-        property("user-select", "none")
-        property("-webkit-user-select", "none")
-        property("-moz-user-select", "none")
-        property("-ms-user-select", "none")
+        makeNonSelectable()
     }
 
-    val logoText by style {
-        fontSize(164.pt)
-        lineHeight(164.pt)
-        paddingTop(8.px)
-        paddingLeft(16.px)
-        color(Color.white)
-        property("user-select", "none")
-        property("-webkit-user-select", "none")
-        property("-moz-user-select", "none")
-        property("-ms-user-select", "none")
+    val startText by style {
+        color(Color.black)
+        position(Position.Fixed)
+        marginLeft(50.vw - 36.pt)
+        marginTop(50.vh - 60.pt)
+        fontSize(120.pt)
+        lineHeight(120.pt)
     }
 
     val fullWidthContentBlock by style {
-        display(DisplayStyle.Flex)
+        position(Position.Relative)
         width(100.vw)
         backgroundColor(Color.white)
     }
@@ -54,44 +58,48 @@ object MyCSS : StyleSheet() {
         height(100.vh)
         backgroundColor(Color.white)
         overflowY("hidden")
+    }
+
+    val mainText by style {
+        right(16.px)
+        position(Position.Absolute)
+        top(8.px)
+        width(60.vw)
+        height(50.vh)
+        fontSize(30.pt)
+        lineHeight(20.pt)
+        textAlign("right")
+        property("text-overflow", "ellipsis")
+        color(Color.white)
         property("mix-blend-mode", "difference")
     }
 
-    val imagesGrid by style {
-        display(DisplayStyle.Grid)
-        property("grid-template-columns", "repeat(3, 1fr)")
-        property("grid-template-rows", "auto")
-        width(100.vw)
-    }
-
-    val mainTextVertical by style {
-        color(Color.black)
-
-        position(Position.Fixed)
-
-        marginLeft(50.vw - 36.pt)
-        marginTop(50.vh - 60.pt)
-
-        fontSize(120.pt)
-        lineHeight(120.pt)
-    }
-
-    val clockBlock by style {
+    val clockBlockForHorizontal by style {
         position(Position.Absolute)
         right(16.px)
         bottom(8.px)
-
-        property("user-select", "none")
-        property("-webkit-user-select", "none")
-        property("-moz-user-select", "none")
-        property("-ms-user-select", "none")
+        makeNonSelectable()
     }
 
-    val clockText by style {
+    val clockBlockForVertical by style {
+        position(Position.Absolute)
+        bottom(40.vh)
+        width(100.vw)
+        makeNonSelectable()
+    }
+
+    val clockTextForHorizontal by style {
         color(Color.black)
-//        position(Position.Relative)
         fontSize(120.pt)
         lineHeight(80.pt)
+    }
+
+    val clockTextForVertical by style {
+        color(Color.black)
+        fontSize(188.pt)
+        lineHeight(96.pt)
+        width(100.vw)
+        textAlign("center")
     }
 
     val contactsBlock by style {
@@ -104,6 +112,13 @@ object MyCSS : StyleSheet() {
         color(Color.black)
         fontSize(48.pt)
         textDecoration("none")
+    }
+
+    private fun CSSBuilder.makeNonSelectable() {
+        property("user-select", "none")
+        property("-webkit-user-select", "none")
+        property("-moz-user-select", "none")
+        property("-ms-user-select", "none")
     }
 
 }

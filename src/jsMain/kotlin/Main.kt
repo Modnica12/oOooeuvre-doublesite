@@ -39,19 +39,25 @@ private fun mainPage() {
     }
 
     Div(attrs = { MyCSS.mainContainer }) {
-        StartImage(verticalScroll, isHorizontal)
+        StartImage(verticalScroll)
         if (isHorizontal) {
             ImagesListHorizontal()
         } else {
             ImagesListVertical()
         }
-        Footer((START_TIME / 1000).toInt())
+        Footer(isHorizontal, (START_TIME / 1000).toInt())
     }
 
     LaunchedEffect(null) {
         while (true) {
             delay(5000)
-            logo = Repo.logos.random()
+            RandomWithoutRepeating@ while (true) {
+                val newLogo = Repo.logos.random()
+                if (newLogo != logo) {
+                    logo = newLogo
+                    break@RandomWithoutRepeating
+                }
+            }
         }
     }
 
@@ -62,11 +68,11 @@ private fun mainPage() {
 
 @OptIn(ExperimentalComposeWebApi::class)
 @Composable
-private fun StartImage(verticalScroll: Float, isHorizontal: Boolean) {
+private fun StartImage(verticalScroll: Float) {
     Div(attrs = { classes(MyCSS.startImageContainer) }) {
         listOf("○", "●", "○", "○").forEachIndexed { index, symbol ->
             Div(attrs = {
-                classes(MyCSS.mainTextVertical)
+                classes(MyCSS.startText)
                 style {
                     val limit = 100.vh.value
                     val limitedScroll = (verticalScroll - limit).coerceAtLeast(0f)
@@ -76,7 +82,7 @@ private fun StartImage(verticalScroll: Float, isHorizontal: Boolean) {
                         val logoBuildingTranslation = horizontalScroll * (-(index % 2) + 1.5)
                         translateX(logoBuildingTranslation)
                     }
-                    val alphaLimitedScroll = limitedScroll / if (isHorizontal) 1.1 else 3.5
+                    val alphaLimitedScroll = limitedScroll / getAlphaDivider()
                     val alpha = (255 - alphaLimitedScroll) / 255
                     color(rgba(0, 0, 0, alpha))
                 }
@@ -90,10 +96,10 @@ private fun StartImage(verticalScroll: Float, isHorizontal: Boolean) {
 @Composable
 private fun ImagesListVertical() {
     Repo.photos.forEach { photo ->
-        Div(attrs = { classes(MyCSS.fullWidthContentBlock) }) {
+        Div(attrs = { classes(MyCSS.fullWidthContentBlock); style { display(DisplayStyle.Flex); backgroundColor(Color.black) } }) {
             Img(
                 src = photo.url,
-                attrs = { style { width(100.vw) } },
+                attrs = { style { width(100.vw); flex(1) } },
             )
         }
     }
@@ -101,37 +107,25 @@ private fun ImagesListVertical() {
 
 @Composable
 private fun ImagesListHorizontal() {
-    Div(attrs = { MyCSS.imagesGrid }) {
-        Repo.photos.forEach { photo ->
-            Div(attrs = {
-                classes(MyCSS.fullWidthContentBlock)
-                style {
-                    height(50.vh)
-                    property("pointer-events", "none")
-                    position(Position.Relative)
-                }
-            }) {
-                Img(
-                    src = photo.url,
-                    attrs = {
-                        style {
-                            height(50.vh)
-                        }
-                    },
-                )
-                Div(attrs = {
+    Repo.photos.forEach { photo ->
+        Div(attrs = {
+            classes(MyCSS.fullWidthContentBlock)
+            style {
+                height(50.vh)
+                property("pointer-events", "none")
+            }
+        }) {
+            Img(
+                src = photo.url,
+                attrs = {
                     style {
-                        right(16.px)
-                        position(Position.Absolute)
-                        top(8.px)
-                        width(50.vw)
                         height(50.vh)
-                        fontSize(32.pt)
                     }
-                }) {
-                    Text(
-                        convertBinaryToSymbols("11010000 10010011 11010001 10000000 11010001 10001111 11010000 10110111 11010000 10111101 11010000 10111110 11010000 10110101")
-                    )
+                },
+            )
+            photo.text?.let { text ->
+                Div(attrs = { classes(MyCSS.mainText) }) {
+                    Text(convertBinaryToSymbols(text))
                 }
             }
         }
@@ -139,29 +133,27 @@ private fun ImagesListHorizontal() {
 }
 
 @Composable
-private fun Footer(startTimeInSeconds: Int) {
+private fun Footer(isHorizontal: Boolean, startTimeInSeconds: Int) {
     Div(attrs = { classes(MyCSS.fullHeightContentBlock) }) {
-        Clock(startTimeInSeconds)
+        Clock(isHorizontal, startTimeInSeconds)
         Contacts()
     }
 }
 
 @Composable
-private fun Clock(startTimeInSeconds: Int) {
+private fun Clock(isHorizontal: Boolean, startTimeInSeconds: Int) {
     val numberToSymbolsConverter = NumberToSymbolsConverter()
     var hours: Int by remember { mutableStateOf(startTimeInSeconds / 60 / 60) }
     var minutes: Int by remember { mutableStateOf((startTimeInSeconds - (hours * 60 * 60)) / 60) }
     var seconds: Int by remember { mutableStateOf(startTimeInSeconds - minutes * 60 - hours * 60 * 60) }
 
-    Div(attrs = { classes(MyCSS.clockBlock) }) {
-        Div(attrs = { classes(MyCSS.clockText) }) {
-            Text(numberToSymbolsConverter(hours).joinToString(separator = ""))
-        }
-        Div(attrs = { classes(MyCSS.clockText) }) {
-            Text(numberToSymbolsConverter(minutes).joinToString(separator = ""))
-        }
-        Div(attrs = { classes(MyCSS.clockText) }) {
-            Text(numberToSymbolsConverter(seconds).joinToString(separator = ""))
+    Div(attrs = {
+        classes(if (isHorizontal) MyCSS.clockBlockForHorizontal else MyCSS.clockBlockForVertical)
+    }) {
+        listOf(hours, minutes, seconds).forEach { timeUnit ->
+            Div(attrs = { classes(if (isHorizontal) MyCSS.clockTextForHorizontal else MyCSS.clockTextForVertical) }) {
+                Text(numberToSymbolsConverter(timeUnit).joinToString(separator = ""))
+            }
         }
     }
 
@@ -196,7 +188,7 @@ private fun Contacts() {
     Div({ classes(MyCSS.contactsBlock) }) {
         Repo.refs.forEach { ref ->
             Div {
-                A(href = ref.url, attrs = { classes(MyCSS.contactText); style { fontSize(if (isMobile()) 24.pt else 48.pt) } }) {
+                A(href = ref.url, attrs = { classes(MyCSS.contactText); style { fontSize(48.pt) } }) {
                     Text(ref.text)
                 }
             }
@@ -204,7 +196,6 @@ private fun Contacts() {
     }
 }
 
-@Composable
 private fun isHorizontal(): Boolean = with (window.screen) {
     width > height
 }
@@ -218,3 +209,10 @@ fun millisecondDiff(myDate: Date): Double {
     val midnightMilliseconds = Date(midnightYear, midnightMonth, midnightDay).getTime()
     return myDate.getTime() - midnightMilliseconds
 }
+
+private fun getAlphaDivider(): Float =
+    when {
+        !isHorizontal() -> 3.5f
+        isMobile() -> (0.0008f * window.screen.height) // Calculate divider for different mobile height (mobile/tablet)
+        else -> 1.1f
+    }
