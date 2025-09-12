@@ -1,19 +1,22 @@
+package presentation
+
 import kotlin.math.pow
 
 class NumberToSymbolsConverter {
 
     operator fun invoke(number: Int): CharArray {
-        if (number == 0) return charArrayOf('○', '○', '○', '○', '○', '○')
+        if (number == 0) return CharArray(BIT_COUNT) { '○' }
         var reminder = number.toFloat()
-        val result = CharArray(MAX_PERIOD)
-        repeat(MAX_PERIOD + 1) { index ->
-            val period = MAX_PERIOD - index
+        val result = CharArray(BIT_COUNT)
+        repeat(BIT_COUNT) { index ->
+            // Max period should be less than count by 1
+            val period = BIT_COUNT - 1 - index
             val current2InPeriod = 2f.pow(period)
             if (reminder < current2InPeriod) {
-                result[index - 1] = '○'
+                result[index] = '○'
             } else {
                 reminder %= current2InPeriod
-                result[index - 1] = '●'
+                result[index] = '●'
             }
         }
         return result
@@ -21,7 +24,7 @@ class NumberToSymbolsConverter {
 
     companion object {
 
-        private const val MAX_PERIOD = 6
+        private const val BIT_COUNT = 6
 
     }
 

@@ -1,3 +1,5 @@
+package presentation.ui
+
 import org.jetbrains.compose.web.css.*
 
 object MyCSS : StyleSheet() {

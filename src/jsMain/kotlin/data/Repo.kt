@@ -1,3 +1,7 @@
+package data
+
+import models.*
+
 object Repo {
 
     val photos = listOf(
@@ -54,29 +58,6 @@ object Repo {
     )
 
 }
-
-data class Photo(
-    val url: String,
-    val text: String? = null,
-)
-
-data class Logo(
-    val common: String,
-    val rare: String,
-    val horizontalSpacing: HorizontalSpacing = HorizontalSpacing.Thin,
-)
-
-enum class HorizontalSpacing(val spacing: String) {
-    None("\u200B"),
-    Thin(" "),
-    Default(" "),
-    Large("  ")
-}
-
-data class Ref(
-    val text: String,
-    val url: String,
-)
 
 
 fun convertBinaryToSymbols(binary: String): String = binary

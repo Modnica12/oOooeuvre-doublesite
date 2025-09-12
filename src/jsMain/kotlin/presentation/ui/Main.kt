@@ -1,23 +1,24 @@
-package dev.oOooeuvre
+package presentation.ui
 
-import Logo
-import MyCSS
-import NumberToSymbolsConverter
-import Repo
+import presentation.NumberToSymbolsConverter
+import data.Repo
 import androidx.compose.runtime.*
-import convertBinaryToSymbols
+import data.convertBinaryToSymbols
 import kotlinx.browser.window
-import kotlinx.coroutines.delay
+import models.Logo
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
-import kotlin.js.Date
+import presentation.ViewModel
+import presentation.isHorizontal
+import presentation.isMobile
 
-private val START_TIME = millisecondDiff(Date())
+private const val ROOT_ELEMENT_ID = "root"
+private const val EVENT_TYPE_SCROLL = "scroll"
 
 fun main() {
-    renderComposable(rootElementId = "root") {
+    renderComposable(rootElementId = ROOT_ELEMENT_ID) {
         Div(attrs = { MyCSS.rootContainer }) {
             mainPage()
         }
@@ -26,7 +27,7 @@ fun main() {
 
 @Composable
 private fun mainPage() {
-    var logo: Logo by remember { mutableStateOf(Repo.logos.first()) }
+    val viewModel = remember { ViewModel() }
     var verticalScroll: Float by remember { mutableStateOf(0f) }
     val isHorizontal = isHorizontal()
 
@@ -34,7 +35,7 @@ private fun mainPage() {
 
     Header(attrs = { classes(MyCSS.header) }) {
         Span(attrs = { classes(MyCSS.logoText) }) {
-            Text("${logo.common}${logo.horizontalSpacing.spacing}${logo.rare}${logo.horizontalSpacing.spacing}${logo.common}${logo.horizontalSpacing.spacing}${logo.common}")
+            Text(viewModel.state.logo.toPrettyString())
         }
     }
 
@@ -45,23 +46,10 @@ private fun mainPage() {
         } else {
             ImagesListVertical()
         }
-        Footer(isHorizontal, (START_TIME / 1000).toInt())
+        Footer(isHorizontal, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
     }
 
-    LaunchedEffect(null) {
-        while (true) {
-            delay(5000)
-            RandomWithoutRepeating@ while (true) {
-                val newLogo = Repo.logos.random()
-                if (newLogo != logo) {
-                    logo = newLogo
-                    break@RandomWithoutRepeating
-                }
-            }
-        }
-    }
-
-    window.addEventListener("scroll", {
+    window.addEventListener(EVENT_TYPE_SCROLL, {
         verticalScroll = window.scrollY.toFloat()
     })
 }
@@ -70,7 +58,7 @@ private fun mainPage() {
 @Composable
 private fun StartImage(verticalScroll: Float) {
     Div(attrs = { classes(MyCSS.startImageContainer) }) {
-        listOf("○", "●", "○", "○").forEachIndexed { index, symbol ->
+        Logo.default.symbolsList.forEachIndexed { index, symbol ->
             Div(attrs = {
                 classes(MyCSS.startText)
                 style {
@@ -133,51 +121,22 @@ private fun ImagesListHorizontal() {
 }
 
 @Composable
-private fun Footer(isHorizontal: Boolean, startTimeInSeconds: Int) {
+private fun Footer(isHorizontal: Boolean, hours: Int, minutes: Int, seconds: Int) {
     Div(attrs = { classes(MyCSS.fullHeightContentBlock) }) {
-        Clock(isHorizontal, startTimeInSeconds)
+        Clock(isHorizontal, hours, minutes, seconds)
         Contacts()
     }
 }
 
 @Composable
-private fun Clock(isHorizontal: Boolean, startTimeInSeconds: Int) {
+private fun Clock(isHorizontal: Boolean, hours: Int, minutes: Int, seconds: Int) {
     val numberToSymbolsConverter = NumberToSymbolsConverter()
-    var hours: Int by remember { mutableStateOf(startTimeInSeconds / 60 / 60) }
-    var minutes: Int by remember { mutableStateOf((startTimeInSeconds - (hours * 60 * 60)) / 60) }
-    var seconds: Int by remember { mutableStateOf(startTimeInSeconds - minutes * 60 - hours * 60 * 60) }
-
     Div(attrs = {
         classes(if (isHorizontal) MyCSS.clockBlockForHorizontal else MyCSS.clockBlockForVertical)
     }) {
         listOf(hours, minutes, seconds).forEach { timeUnit ->
             Div(attrs = { classes(if (isHorizontal) MyCSS.clockTextForHorizontal else MyCSS.clockTextForVertical) }) {
                 Text(numberToSymbolsConverter(timeUnit).joinToString(separator = ""))
-            }
-        }
-    }
-
-    LaunchedEffect(null) {
-        while (true) {
-            delay(1000)
-            when {
-                seconds < 59 -> {
-                    seconds += 1
-                }
-                minutes < 59 -> {
-                    seconds = 0
-                    minutes += 1
-                }
-                hours < 23 -> {
-                    seconds = 0
-                    minutes = 0
-                    hours += 1
-                }
-                else -> {
-                    seconds = 0
-                    minutes = 0
-                    hours = 0
-                }
             }
         }
     }
@@ -194,20 +153,6 @@ private fun Contacts() {
             }
         }
     }
-}
-
-private fun isHorizontal(): Boolean = with (window.screen) {
-    width > height
-}
-
-private fun isMobile(): Boolean = window.navigator.maxTouchPoints > 0
-
-fun millisecondDiff(myDate: Date): Double {
-    val midnightDay = myDate.getUTCDate()
-    val midnightMonth = myDate.getUTCMonth()
-    val midnightYear = myDate.getUTCFullYear()
-    val midnightMilliseconds = Date(midnightYear, midnightMonth, midnightDay).getTime()
-    return myDate.getTime() - midnightMilliseconds
 }
 
 private fun getAlphaDivider(): Float =
