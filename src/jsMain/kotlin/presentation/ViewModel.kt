@@ -7,7 +7,6 @@ import kotlinx.coroutines.*
 import models.State
 import kotlin.coroutines.CoroutineContext
 import kotlin.js.Date
-import kotlin.time.toKotlinInstant
 
 class ViewModel: CoroutineScope {
 
@@ -67,12 +66,16 @@ class ViewModel: CoroutineScope {
         _state.value = _state.value.transform()
     }
 
-    private fun millisecondDiff(myDate: Date): Double {
-        val midnightDay = myDate.getDate()
-        val midnightMonth = myDate.getMonth()
-        val midnightYear = myDate.getFullYear()
-        val midnightMilliseconds = Date(midnightYear, midnightMonth, midnightDay).getTime()
-        return myDate.getTime() - midnightMilliseconds
+    // TODO: проблема, если время устанавливается вручную, а не автоматически, опираясь на таймзону.
+    private fun millisecondDiff(date: Date): Double {
+        val ekbUTCOffset = 5 * 60 * 60 * 1000
+        val currentTimeZoneOffset = date.getTimezoneOffset() * 60 * 1000
+        val ekbDate = Date(date.getTime() + ekbUTCOffset)
+        val ekbDay = ekbDate.getUTCDate()
+        val ekbMonth = ekbDate.getUTCMonth()
+        val ekbYear = ekbDate.getUTCFullYear()
+        val ekbMidnightMilliseconds = Date(ekbYear, ekbMonth, ekbDay).getTime()
+        return (ekbDate.getTime() - ekbMidnightMilliseconds + currentTimeZoneOffset)
     }
 
 }
