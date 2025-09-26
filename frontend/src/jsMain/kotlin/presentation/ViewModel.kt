@@ -3,6 +3,8 @@ package presentation
 import data.Repo
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import data.PhotosRepository
+import data.TimeRepository
 import kotlinx.coroutines.*
 import models.State
 import kotlin.coroutines.CoroutineContext
@@ -16,41 +18,58 @@ class ViewModel: CoroutineScope {
     val state: State
         get() = _state.value
 
+    private val photosRepository = PhotosRepository()
+    private val timeRepository = TimeRepository()
+
     init {
         startLogoSwitching()
         startClock()
+        launch(Dispatchers.Default) {
+            photosRepository.getPhotos()
+                .onSuccess { photos -> updateState { copy(photos = photos, isLoading = false) } }
+//                .onFailure { it.printStackTrace() }
+        }
+        requestTime()
+    }
+
+    fun visibilityChanged(newVisibilityState: String?) {
+        if (newVisibilityState != null && newVisibilityState == VISIBILITY_STATE_VISIBLE) {
+            requestTime()
+        }
+    }
+
+    private fun requestTime() {
+        launch(Dispatchers.Default) {
+            timeRepository.getEkbTimeMillis()
+                .onSuccess { time ->
+                    updateState { copy(hours = time.hours, minutes = time.minutes, seconds = time.seconds) }
+                }
+        }
     }
 
     private fun startLogoSwitching() {
         launch {
             while (true) {
                 delay(5000)
-                RandomWithoutRepeating@ while (true) {
-                    val newLogo = Repo.logos.random()
-                    if (newLogo != state.logo) {
-                        updateState {
-                            copy(logo = newLogo)
-                        }
-                        break@RandomWithoutRepeating
-                    }
-                }
+                setRandomLogoWithoutRepeating()
+            }
+        }
+    }
+
+    private fun setRandomLogoWithoutRepeating() {
+        while (true) {
+            val newLogo = Repo.logos.random()
+            if (newLogo != state.logo) {
+                updateState { copy(logo = newLogo) }
+                break
             }
         }
     }
 
     private fun startClock() {
         launch(Dispatchers.Default) {
-            val localTimeInSeconds = (millisecondDiff(Date()) / SECOND_IN_MILLIS).toInt()
-            // TODO: точно ли нельзя сделать через остаток от деления?
-            val startHours = localTimeInSeconds / 60 / 60
-            val startMinutes = (localTimeInSeconds - (startHours * 60 * 60)) / 60
-            val startSeconds = localTimeInSeconds - startMinutes * 60 - startHours * 60 * 60
-
-            withContext(Dispatchers.Main) {
-                updateState { copy(hours = startHours, minutes = startMinutes, seconds = startSeconds) }
-            }
-
             while (true) {
+                getTimeFromLocal()
                 delay(SECOND_IN_MILLIS)
                 when {
                     state.seconds < 59 -> updateState { copy(seconds = seconds + 1) }
@@ -62,11 +81,18 @@ class ViewModel: CoroutineScope {
         }
     }
 
-    private fun updateState(transform: State.() -> State) {
-        _state.value = _state.value.transform()
+    private suspend fun getTimeFromLocal() {
+        val localTimeInSeconds = (millisecondDiff(Date()) / SECOND_IN_MILLIS).toInt()
+        // TODO: точно ли нельзя сделать через остаток от деления?
+        val startHours = localTimeInSeconds / 60 / 60
+        val startMinutes = (localTimeInSeconds - (startHours * 60 * 60)) / 60
+        val startSeconds = localTimeInSeconds - startMinutes * 60 - startHours * 60 * 60
+
+        withContext(Dispatchers.Main) {
+            updateState { copy(hours = startHours, minutes = startMinutes, seconds = startSeconds) }
+        }
     }
 
-    // TODO: проблема, если время устанавливается вручную, а не автоматически, опираясь на таймзону.
     private fun millisecondDiff(date: Date): Double {
         val ekbUTCOffset = 5 * 60 * 60 * 1000
         val currentTimeZoneOffset = date.getTimezoneOffset() * 60 * 1000
@@ -76,6 +102,16 @@ class ViewModel: CoroutineScope {
         val ekbYear = ekbDate.getUTCFullYear()
         val ekbMidnightMilliseconds = Date(ekbYear, ekbMonth, ekbDay).getTime()
         return (ekbDate.getTime() - ekbMidnightMilliseconds + currentTimeZoneOffset)
+    }
+
+    private fun updateState(transform: State.() -> State) {
+        _state.value = _state.value.transform()
+    }
+
+    companion object {
+
+        private const val VISIBILITY_STATE_VISIBLE = "visible"
+
     }
 
 }

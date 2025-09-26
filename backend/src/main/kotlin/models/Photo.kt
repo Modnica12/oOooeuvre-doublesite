@@ -1,4 +1,4 @@
-package models
+package dev.oOooeuvre.models
 
 import kotlinx.serialization.Serializable
 

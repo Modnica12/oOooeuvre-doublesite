@@ -1,5 +1,6 @@
 package dev.oOooeuvre
 
+import dev.oOooeuvre.routing.configureRouting
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -9,4 +10,5 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureSerialization()
     configureRouting()
+    configureCors()
 }
