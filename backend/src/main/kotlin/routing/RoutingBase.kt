@@ -5,7 +5,7 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
-        setUpPhotosRoute()
+        setUpMainPageRouter()
         setUpEkbTimeRoute()
     }
 }

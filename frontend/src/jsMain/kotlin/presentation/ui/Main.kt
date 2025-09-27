@@ -5,7 +5,7 @@ import data.Repo
 import androidx.compose.runtime.*
 import kotlinx.browser.window
 import models.Logo
-import models.Photo
+import data.models.Photo
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*

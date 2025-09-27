@@ -1,31 +1,20 @@
-package dev.oOooeuvre.routing
+package dev.oOooeuvre.providers
 
 import data.Repo
 import dev.oOooeuvre.models.Photo
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-
-private const val PHOTOS_PATH = "/photos"
 
 private const val OoOO_SYMBOL_ZERO = "○"
 private const val OoOO_SYMBOL_ONE = "●"
 private const val OoOO_SPACER = "\u200B"
 
-fun Routing.setUpPhotosRoute() {
-    get(PHOTOS_PATH) {
-        handlePhotosRequest()
-    }
-}
-
-private suspend fun RoutingContext.handlePhotosRequest() {
+fun getPhotos(): List<Photo> {
     val localPhotos = Repo.photos
-    val photos = localPhotos.map { localPhoto ->
+    return localPhotos.map { localPhoto ->
         Photo(
             url = "${Repo.IMAGES_HOST}${localPhoto.imageName}",
             text = localPhoto.text?.getBitsString()?.convertBinaryToSymbols()
         )
     }
-    call.respond(photos)
 }
 
 private fun String.getBitsString(): String = toByteArray()

@@ -3,10 +3,9 @@ package presentation
 import data.Repo
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import data.PhotosRepository
+import data.MainPageRepository
 import data.TimeRepository
 import kotlinx.coroutines.*
-import models.State
 import kotlin.coroutines.CoroutineContext
 import kotlin.js.Date
 
@@ -18,23 +17,35 @@ class ViewModel: CoroutineScope {
     val state: State
         get() = _state.value
 
-    private val photosRepository = PhotosRepository()
+    private val mainPageRepository = MainPageRepository()
     private val timeRepository = TimeRepository()
 
     init {
         startLogoSwitching()
         startClock()
-        launch(Dispatchers.Default) {
-            photosRepository.getPhotos()
-                .onSuccess { photos -> updateState { copy(photos = photos, isLoading = false) } }
-//                .onFailure { it.printStackTrace() }
-        }
-        requestTime()
+        requestMainPage()
     }
 
     fun visibilityChanged(newVisibilityState: String?) {
         if (newVisibilityState != null && newVisibilityState == VISIBILITY_STATE_VISIBLE) {
             requestTime()
+        }
+    }
+
+    private fun requestMainPage() {
+        launch(Dispatchers.Default) {
+            mainPageRepository.getMainPage()
+                .onSuccess { mainPage ->
+                    updateState {
+                        copy(
+                            photos = mainPage.photos,
+                            hours = mainPage.clockTime.hours,
+                            minutes = mainPage.clockTime.minutes,
+                            seconds = mainPage.clockTime.seconds,
+                            isLoading = false,
+                        )
+                    }
+                }
         }
     }
 

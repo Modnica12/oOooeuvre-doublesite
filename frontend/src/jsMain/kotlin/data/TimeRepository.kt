@@ -1,6 +1,6 @@
 package data
 
-import models.ClockTime
+import data.models.ClockTime
 
 class TimeRepository {
 

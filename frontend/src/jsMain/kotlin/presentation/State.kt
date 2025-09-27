@@ -1,4 +1,7 @@
-package models
+package presentation
+
+import data.models.Photo
+import models.Logo
 
 data class State(
     val logo: Logo = Logo.default,

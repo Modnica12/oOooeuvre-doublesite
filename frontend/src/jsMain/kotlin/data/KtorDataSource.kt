@@ -1,5 +1,6 @@
 package data
 
+import data.models.ClockTime
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.js.*
@@ -9,8 +10,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import models.ClockTime
-import models.Photo
+import data.models.MainPage
 
 class KtorDataSource {
 
@@ -34,8 +34,8 @@ class KtorDataSource {
         return client.get("$HOST/ekbtime").body()
     }
 
-    suspend fun getPhotos(): List<Photo> {
-        return client.get("$HOST/photos").body()
+    suspend fun getMainPage(): MainPage {
+        return client.get("$HOST/mainpage").body()
     }
 
     companion object {
