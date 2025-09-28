@@ -40,7 +40,7 @@ class KtorDataSource {
 
     companion object {
 
-        private const val HOST = "http://0.0.0.0:7777"
+        private const val HOST = "http://130.193.45.228"
 
     }
 

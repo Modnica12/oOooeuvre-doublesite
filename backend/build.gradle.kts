@@ -22,3 +22,11 @@ dependencies {
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
+
+ktor {
+    docker {
+        localImageName.set("oOooeuvre-doublesite-backend-docker")
+        imageTag.set("1.0.0")
+        jreVersion.set(JavaVersion.VERSION_17)
+    }
+}

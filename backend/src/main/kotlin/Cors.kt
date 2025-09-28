@@ -9,5 +9,6 @@ fun Application.configureCors() {
         allowMethod(HttpMethod.Options)
         allowHeader(HttpHeaders.ContentType)
         allowHost("localhost:8080", schemes = listOf("http"))
+        allowHost("www.polutions.solutions", schemes = listOf("http"))
     }
 }
