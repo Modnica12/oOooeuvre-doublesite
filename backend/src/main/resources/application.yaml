@@ -1,6 +1,0 @@
-ktor:
-    application:
-        modules:
-            - dev.oOooeuvre.ApplicationKt.module
-    deployment:
-        port: 7777
