@@ -1,11 +1,11 @@
 package presentation.ui
 
 import presentation.NumberToSymbolsConverter
-import data.Repo
 import androidx.compose.runtime.*
 import kotlinx.browser.window
 import models.Logo
 import data.models.Photo
+import models.Ref
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
@@ -46,14 +46,14 @@ private fun mainPage() {
 
     Div(attrs = { MyCSS.mainContainer }) {
         StartImage(verticalScroll)
-        if (!viewModel.state.isLoading) {
+//        if (!viewModel.state.isLoading) {
             if (isHorizontal) {
                 ImagesListHorizontal(viewModel.state.photos)
             } else {
                 ImagesListVertical(viewModel.state.photos)
             }
-            Footer(isHorizontal, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
-        }
+            Footer(isHorizontal, viewModel.state.refs, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
+//        }
     }
 
     window.addEventListener(EVENT_TYPE_SCROLL, {
@@ -151,10 +151,10 @@ private fun ImagesListHorizontal(photos: List<Photo>) {
 }
 
 @Composable
-private fun Footer(isHorizontal: Boolean, hours: Int, minutes: Int, seconds: Int) {
+private fun Footer(isHorizontal: Boolean, refs: List<Ref>, hours: Int, minutes: Int, seconds: Int) {
     Div(attrs = { classes(MyCSS.fullHeightContentBlock) }) {
         Clock(isHorizontal, hours, minutes, seconds)
-        Contacts()
+        Contacts(isHorizontal, refs)
     }
 }
 
@@ -173,15 +173,20 @@ private fun Clock(isHorizontal: Boolean, hours: Int, minutes: Int, seconds: Int)
 }
 
 @Composable
-private fun Contacts() {
-    Div({ classes(MyCSS.contactsBlock) }) {
-        Repo.refs.forEach { ref ->
+private fun Contacts(isHorizontal: Boolean, refs: List<Ref>) {
+    Div(attrs = {
+        classes(MyCSS.contactsBlock)
+        style {
+            if (!isHorizontal) bottom(24.px)
+        }
+    }) {
+        refs.forEach { ref ->
             Div {
                 A(
                     href = ref.url,
                     attrs = {
                         classes(MyCSS.contactText)
-                        style { fontSize(48.pt) }
+                        style { fontSize(ref.size.pt) }
                     }
                 ) {
                     Text(ref.text)

@@ -27,6 +27,8 @@ object MyCSS : StyleSheet() {
         paddingLeft(16.px)
         color(Color.white)
         makeNonSelectable()
+        fontFamily("Arial")
+        fontWeight("900")
     }
 
     val mainContainer by style {
@@ -47,6 +49,7 @@ object MyCSS : StyleSheet() {
         marginTop(50.vh - 60.pt)
         fontSize(120.pt)
         lineHeight(120.pt)
+        fontFamily("Arial")
     }
 
     val fullWidthContentBlock by style {
@@ -74,6 +77,7 @@ object MyCSS : StyleSheet() {
         property("text-overflow", "ellipsis")
         color(Color.white)
         property("mix-blend-mode", "difference")
+        fontFamily("Arial")
     }
 
     val clockBlockForHorizontal by style {
@@ -94,6 +98,7 @@ object MyCSS : StyleSheet() {
         color(Color.black)
         fontSize(120.pt)
         lineHeight(80.pt)
+        fontFamily("Arial")
     }
 
     val clockTextForVertical by style {
@@ -102,6 +107,7 @@ object MyCSS : StyleSheet() {
         lineHeight(96.pt)
         width(100.vw)
         textAlign("center")
+        fontFamily("Arial")
     }
 
     val contactsBlock by style {
@@ -114,6 +120,7 @@ object MyCSS : StyleSheet() {
         color(Color.black)
         fontSize(48.pt)
         textDecoration("none")
+        fontFamily("Arial")
     }
 
     private fun CSSBuilder.makeNonSelectable() {
