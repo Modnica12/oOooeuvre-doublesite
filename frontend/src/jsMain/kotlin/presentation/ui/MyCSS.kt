@@ -60,8 +60,6 @@ object MyCSS : StyleSheet() {
     val fullWidthContentBlock by style {
         position(Position.Relative)
         width(100.vw)
-        // on windows scrollbar takes space and creates horizontal scroll
-        maxWidth(99.vw)
         backgroundColor(Color.white)
         overflow("hidden")
     }

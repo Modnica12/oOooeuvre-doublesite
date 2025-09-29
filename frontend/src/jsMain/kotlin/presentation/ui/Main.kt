@@ -47,10 +47,11 @@ private fun mainPage() {
         if (!viewModel.state.isLoading) {
             if (isHorizontal()) {
                 ImagesListHorizontal(viewModel.state.photos)
+                Footer(viewModel.state.refs, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
             } else {
                 ImagesListVertical(viewModel.state.photos)
+                Footer(viewModel.state.refs, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
             }
-            Footer(viewModel.state.refs, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
         }
     }
 
@@ -121,7 +122,11 @@ private fun ImagesListHorizontal(photos: List<Photo>) {
     photos.forEachIndexed { index, photo ->
         Div(attrs = {
             classes(MyCSS.fullWidthContentBlock)
-            style { height(50.vh) }
+            style {
+                height(50.vh)
+                // on windows scrollbar takes space and creates horizontal scroll
+                maxWidth(99.vw)
+            }
         }) {
             Img(
                 src = photo.url,
@@ -137,6 +142,13 @@ private fun ImagesListHorizontal(photos: List<Photo>) {
                 Div(
                     attrs = {
                         classes(MyCSS.mainText)
+                        style {
+                            if (isHorizontal() && isMobile()) {
+                                width(70.vw)
+                                fontSize(20.pt)
+                                lineHeight(16.pt)
+                            }
+                        }
                         onClick {
                             window.navigator.clipboard.writeText(text)
                         }
@@ -164,7 +176,15 @@ private fun Clock(hours: Int, minutes: Int, seconds: Int) {
         classes(if (isHorizontal()) MyCSS.clockBlockForHorizontal else MyCSS.clockBlockForVertical)
     }) {
         listOf(hours, minutes, seconds).forEach { timeUnit ->
-            Div(attrs = { classes(if (isHorizontal()) MyCSS.clockTextForHorizontal else MyCSS.clockTextForVertical) }) {
+            Div(attrs = {
+                classes(if (isHorizontal()) MyCSS.clockTextForHorizontal else MyCSS.clockTextForVertical)
+                style {
+                    if (isHorizontal() && isMobile()) {
+                        fontSize(64.pt)
+                        lineHeight(48.pt)
+                    }
+                }
+            }) {
                 Text(numberToSymbolsConverter(timeUnit).joinToString(separator = ""))
             }
         }
