@@ -31,16 +31,16 @@ class KtorDataSource {
     }
 
     suspend fun getEkbTime(): ClockTime {
-        return client.get("$HOST/ekbtime").body()
+        return client.get("$API_URL/ekbtime").body()
     }
 
     suspend fun getMainPage(): MainPage {
-        return client.get("$HOST/mainpage").body()
+        return client.get("$API_URL/mainpage").body()
     }
 
     companion object {
 
-        private const val HOST = "http://130.193.45.228"
+        private const val API_URL = "https://polutions.solutions/api"
 
     }
 
