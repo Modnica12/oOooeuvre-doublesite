@@ -34,8 +34,6 @@ fun main() {
 private fun mainPage() {
     val viewModel = remember { ViewModel() }
     var verticalScroll: Float by remember { mutableStateOf(0f) }
-    val isHorizontal = isHorizontal()
-
     Style(MyCSS)
 
     Header(attrs = { classes(MyCSS.header) }) {
@@ -46,14 +44,14 @@ private fun mainPage() {
 
     Div(attrs = { MyCSS.mainContainer }) {
         StartImage(verticalScroll)
-//        if (!viewModel.state.isLoading) {
-            if (isHorizontal) {
+        if (!viewModel.state.isLoading) {
+            if (isHorizontal()) {
                 ImagesListHorizontal(viewModel.state.photos)
             } else {
                 ImagesListVertical(viewModel.state.photos)
             }
-            Footer(isHorizontal, viewModel.state.refs, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
-//        }
+            Footer(viewModel.state.refs, viewModel.state.hours, viewModel.state.minutes, viewModel.state.seconds)
+        }
     }
 
     window.addEventListener(EVENT_TYPE_SCROLL, {
@@ -131,6 +129,7 @@ private fun ImagesListHorizontal(photos: List<Photo>) {
                     style {
                         property("pointer-events", "none")
                         height(50.vh)
+                        overflow("hidden")
                     }
                 },
             )
@@ -151,21 +150,21 @@ private fun ImagesListHorizontal(photos: List<Photo>) {
 }
 
 @Composable
-private fun Footer(isHorizontal: Boolean, refs: List<Ref>, hours: Int, minutes: Int, seconds: Int) {
+private fun Footer(refs: List<Ref>, hours: Int, minutes: Int, seconds: Int) {
     Div(attrs = { classes(MyCSS.fullHeightContentBlock) }) {
-        Clock(isHorizontal, hours, minutes, seconds)
-        Contacts(isHorizontal, refs)
+        Clock(hours, minutes, seconds)
+        Contacts(refs)
     }
 }
 
 @Composable
-private fun Clock(isHorizontal: Boolean, hours: Int, minutes: Int, seconds: Int) {
+private fun Clock(hours: Int, minutes: Int, seconds: Int) {
     val numberToSymbolsConverter = NumberToSymbolsConverter()
     Div(attrs = {
-        classes(if (isHorizontal) MyCSS.clockBlockForHorizontal else MyCSS.clockBlockForVertical)
+        classes(if (isHorizontal()) MyCSS.clockBlockForHorizontal else MyCSS.clockBlockForVertical)
     }) {
         listOf(hours, minutes, seconds).forEach { timeUnit ->
-            Div(attrs = { classes(if (isHorizontal) MyCSS.clockTextForHorizontal else MyCSS.clockTextForVertical) }) {
+            Div(attrs = { classes(if (isHorizontal()) MyCSS.clockTextForHorizontal else MyCSS.clockTextForVertical) }) {
                 Text(numberToSymbolsConverter(timeUnit).joinToString(separator = ""))
             }
         }
@@ -173,11 +172,15 @@ private fun Clock(isHorizontal: Boolean, hours: Int, minutes: Int, seconds: Int)
 }
 
 @Composable
-private fun Contacts(isHorizontal: Boolean, refs: List<Ref>) {
+private fun Contacts(refs: List<Ref>) {
     Div(attrs = {
         classes(MyCSS.contactsBlock)
         style {
-            if (!isHorizontal) bottom(24.px)
+            // fix for mobile screen's rounded corners
+            if (!isHorizontal()) {
+                bottom(48.px)
+                left(64.px)
+            }
         }
     }) {
         refs.forEach { ref ->
@@ -186,7 +189,9 @@ private fun Contacts(isHorizontal: Boolean, refs: List<Ref>) {
                     href = ref.url,
                     attrs = {
                         classes(MyCSS.contactText)
-                        style { fontSize(ref.size.pt) }
+                        style {
+                            fontSize(ref.size.pt * if (isHorizontal()) 1 else 2)
+                        }
                     }
                 ) {
                     Text(ref.text)

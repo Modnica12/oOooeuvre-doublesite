@@ -6,7 +6,9 @@ object MyCSS : StyleSheet() {
 
     val rootContainer by style {
         margin(0.px)
-        overflowX("hidden")
+        overflow("hidden")
+        width(100.vw)
+        maxWidth(100.vw)
     }
 
     val header by style {
@@ -18,6 +20,7 @@ object MyCSS : StyleSheet() {
         justifyContent(JustifyContent.SpaceBetween)
         property("z-index", "3")
         property("mix-blend-mode", "difference")
+        overflow("hidden")
     }
 
     val logoText by style {
@@ -28,18 +31,19 @@ object MyCSS : StyleSheet() {
         color(Color.white)
         makeNonSelectable()
         fontFamily("Arial")
-        fontWeight("900")
+        overflow("hidden")
     }
 
     val mainContainer by style {
         width(100.vw)
         position(Position.Relative)
+        overflow("hidden")
     }
 
     val startImageContainer by style {
         height(100.vh)
-        overflowX("hidden")
         makeNonSelectable()
+        overflow("hidden")
     }
 
     val startText by style {
@@ -50,19 +54,23 @@ object MyCSS : StyleSheet() {
         fontSize(120.pt)
         lineHeight(120.pt)
         fontFamily("Arial")
+        overflow("hidden")
     }
 
     val fullWidthContentBlock by style {
         position(Position.Relative)
         width(100.vw)
+        // on windows scrollbar takes space and creates horizontal scroll
+        maxWidth(99.vw)
         backgroundColor(Color.white)
+        overflow("hidden")
     }
 
     val fullHeightContentBlock by style {
         position(Position.Relative)
         height(100.vh)
         backgroundColor(Color.white)
-        overflowY("hidden")
+        overflow("hidden")
     }
 
     val mainText by style {
@@ -78,6 +86,7 @@ object MyCSS : StyleSheet() {
         color(Color.white)
         property("mix-blend-mode", "difference")
         fontFamily("Arial")
+        overflow("hidden")
     }
 
     val clockBlockForHorizontal by style {
@@ -85,6 +94,7 @@ object MyCSS : StyleSheet() {
         right(16.px)
         bottom(8.px)
         makeNonSelectable()
+        overflow("hidden")
     }
 
     val clockBlockForVertical by style {
@@ -92,6 +102,7 @@ object MyCSS : StyleSheet() {
         bottom(40.vh)
         width(100.vw)
         makeNonSelectable()
+        overflow("hidden")
     }
 
     val clockTextForHorizontal by style {
@@ -99,21 +110,24 @@ object MyCSS : StyleSheet() {
         fontSize(120.pt)
         lineHeight(80.pt)
         fontFamily("Arial")
+        overflow("hidden")
     }
 
     val clockTextForVertical by style {
         color(Color.black)
         fontSize(188.pt)
-        lineHeight(96.pt)
+        lineHeight(104.pt)
         width(100.vw)
         textAlign("center")
         fontFamily("Arial")
+        overflow("hidden")
     }
 
     val contactsBlock by style {
         position(Position.Absolute)
         left(16.px)
         bottom(8.px)
+        overflow("hidden")
     }
 
     val contactText by style {
@@ -121,6 +135,8 @@ object MyCSS : StyleSheet() {
         fontSize(48.pt)
         textDecoration("none")
         fontFamily("Arial")
+        overflow("hidden")
+        marginTop(16.px)
     }
 
     private fun CSSBuilder.makeNonSelectable() {
