@@ -14,3 +14,10 @@ git reset --hard origin/upgrades-for-frontend
 sudo mv /home/ooooeuvre-boss/oOooeuvre-doublesite/frontend/artifacts/dist/ /var/www/
 sudo systemctl restart nginx
 uvicorn main:app --reload
+
+sudo python3 -m venv fastapi-env
+source fastapi-env/bin/activate
+pip install fastapi
+pip install 'uvicorn[standard]'
+pip install gunicorn
+gunicorn -k uvicorn.workers.UvicornWorker -b 127.0.0.1:8000 -w 4 main:app
