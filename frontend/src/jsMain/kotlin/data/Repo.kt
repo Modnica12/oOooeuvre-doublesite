@@ -13,8 +13,8 @@ object Repo {
     )
 
     val refs = listOf(
-        Ref(text = "tg", url = "https://t.me/oOooeuvre", size = 54),
-        Ref(text = "special thx to leonidshkn", url = "https://t.me/leonidshkn", size = 32),
+        Ref(text = "my tg", url = "https://t.me/oOooeuvre", size = 64),
+        Ref(text = "and special thx to leonidshkn", url = "https://t.me/leonidshkn", size = 32),
     )
 
 }

@@ -134,7 +134,7 @@ object MyCSS : StyleSheet() {
         textDecoration("none")
         fontFamily("Arial")
         overflow("hidden")
-        marginTop(16.px)
+        marginTop(24.px)
     }
 
     private fun CSSBuilder.makeNonSelectable() {
